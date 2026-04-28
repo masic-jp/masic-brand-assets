@@ -30,19 +30,25 @@ const MaSICLogo = ({ size = 48, style = {}, mono = false }) => {
   );
 };
 
-const P = {
-  org_jp:  '一般社団法人',
-  org_jp2: '数理社会実装教育研究センター',
-  org_en_full: 'Mathematics for Social Implementation Center',
-  org_en_short: 'Mathematics for Social\nImplementation Center',
-  org_en_legal: 'General Incorporated Association',
-  dept_jp: '教育担当理事',
-  dept_en: 'Director of Education',
-  name_jp: '宇田　智紀',
-  name_en: 'Tomoki Uda',
-  email:   'uda@masic.jp',
-  web:     'masic.jp',
-};
+// Personal-info defaults. Overridable at build time by `_rebuild.py --profile`,
+// which prepends `window.__MaSIC_PROFILE = {...}` before this file is bundled.
+const P = (() => {
+  const defaults = {
+    org_jp:  '一般社団法人',
+    org_jp2: '数理社会実装教育研究センター',
+    org_en_full: 'Mathematics for Social Implementation Center',
+    org_en_short: 'Mathematics for Social\nImplementation Center',
+    org_en_legal: 'General Incorporated Association',
+    dept_jp: '役職',
+    dept_en: 'Your Title',
+    name_jp: 'お名前',
+    name_en: 'Your Name',
+    email:   'name@example.com',
+    web:     'example.com',
+  };
+  const profile = (typeof window !== 'undefined' && window.__MaSIC_PROFILE) || {};
+  return { ...defaults, ...profile };
+})();
 
 const Card = ({ children, bg = C.paper }) => (
   <div style={{
@@ -147,10 +153,10 @@ const V2Front = () => (
         </div>
         <div>
           <div style={{ fontFamily: 'Zen Kaku Gothic New, sans-serif', fontWeight: 900, fontSize: 36, color: C.ink, letterSpacing: 2, lineHeight: 1 }}>
-            宇田 智紀
+            {P.name_jp}
           </div>
           <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 500, fontSize: 16, color: C.muted, letterSpacing: 1, marginTop: 6 }}>
-            Tomoki Uda
+            {P.name_en}
           </div>
         </div>
         <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 15, color: C.navy, lineHeight: 1.5, fontWeight: 500 }}>
@@ -213,14 +219,14 @@ const V3Front = () => (
       </div>
       <div>
         <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: C.red, letterSpacing: 1.5, marginBottom: 8, fontWeight: 600 }}>
-          → 教育担当理事 / DIRECTOR
+          → {P.dept_jp} / DIRECTOR
         </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
           <div style={{ fontFamily: 'IBM Plex Sans JP, sans-serif', fontWeight: 600, fontSize: 32, color: C.ink, letterSpacing: 4, lineHeight: 1 }}>
-            宇田 智紀
+            {P.name_jp}
           </div>
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, fontSize: 16, color: C.muted }}>
-            Tomoki Uda
+            {P.name_en}
           </div>
         </div>
       </div>
@@ -271,12 +277,12 @@ const V3Back = () => (
         </div>
       </div>
       <div style={{ borderTop: '1px solid rgba(250,250,247,0.18)', paddingTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, opacity: 0.9, lineHeight: 1.4, fontWeight: 500 }}>
-          Mathematics for Social<br/>Implementation Center
+        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, opacity: 0.9, lineHeight: 1.4, fontWeight: 500, whiteSpace: 'pre-line' }}>
+          {P.org_en_short}
         </div>
         <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, opacity: 0.95, textAlign: 'right', fontWeight: 500 }}>
-          Tomoki Uda<br/>
-          <span style={{ opacity: 0.6, fontSize: 10 }}>Director of Education</span>
+          {P.name_en}<br/>
+          <span style={{ opacity: 0.6, fontSize: 10 }}>{P.dept_en}</span>
         </div>
       </div>
     </div>
@@ -303,10 +309,10 @@ const V4Front = () => (
           {P.dept_jp}
         </div>
         <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 900, fontSize: 40, color: C.ink, letterSpacing: 3, lineHeight: 1 }}>
-          宇田 智紀
+          {P.name_jp}
         </div>
         <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 16, color: C.muted, marginTop: 8 }}>
-          Tomoki Uda
+          {P.name_en}
         </div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
@@ -345,14 +351,14 @@ const V4Back = () => (
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 16, lineHeight: 1.3 }}>
-            Tomoki Uda
+            {P.name_en}
           </div>
           <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: 12, opacity: 0.92, letterSpacing: 0.5 }}>
-            Director of Education
+            {P.dept_en}
           </div>
         </div>
-        <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, opacity: 0.95, textAlign: 'right', lineHeight: 1.5, fontWeight: 600 }}>
-          Mathematics for Social<br/>Implementation Center
+        <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, opacity: 0.95, textAlign: 'right', lineHeight: 1.5, fontWeight: 600, whiteSpace: 'pre-line' }}>
+          {P.org_en_short}
         </div>
       </div>
     </div>
@@ -366,7 +372,7 @@ const V5Front = () => (
   <Card bg={C.paperWarm}>
     <div style={{ position: 'absolute', inset: 0, padding: '18px 24px', display: 'flex', justifyContent: 'space-between' }}>
       {/* 縦書き：右が古い列（先に読む）、左が新しい列。
-          一般社団法人 → 数理社会実装教育研究 → センター → 教育担当理事 → 宇田 智紀 */}
+          一般社団法人 → 数理社会実装教育研究 → センター → 役職 → 氏名 */}
       <div style={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'flex-start', gap: 10, height: '100%', paddingTop: 4, paddingBottom: 4 }}>
         <div style={{ writingMode: 'vertical-rl', fontFamily: 'Shippori Mincho, serif', fontWeight: 500, fontSize: 12, color: C.muted, letterSpacing: 2, lineHeight: 1 }}>
           一般社団法人
@@ -378,20 +384,20 @@ const V5Front = () => (
           センター
         </div>
         <div style={{ writingMode: 'vertical-rl', fontFamily: 'Shippori Mincho, serif', fontWeight: 500, fontSize: 11, color: C.red, letterSpacing: 4, lineHeight: 1, marginTop: 36 }}>
-          教育担当理事
+          {P.dept_jp}
         </div>
         <div style={{ writingMode: 'vertical-rl', fontFamily: 'Shippori Mincho, serif', fontWeight: 600, fontSize: 24, color: C.ink, letterSpacing: 8, lineHeight: 1 }}>
-          宇田 智紀
+          {P.name_jp}
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between' }}>
         <MaSICLogo size={56} />
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 600, fontSize: 16, color: C.navy, letterSpacing: 0.5, lineHeight: 1 }}>
-            Tomoki Uda
+            {P.name_en}
           </div>
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, fontSize: 10, color: C.muted, letterSpacing: 1.5, marginTop: 4 }}>
-            DIRECTOR OF EDUCATION
+            {P.dept_en.toUpperCase()}
           </div>
           <div style={{ width: 32, height: 1, background: C.navy, opacity: 0.4, marginTop: 10, marginBottom: 10, marginLeft: 'auto' }}></div>
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, color: C.navy, lineHeight: 1.5, fontWeight: 500 }}>
@@ -427,15 +433,15 @@ const V5Back = () => (
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 600, fontSize: 15, color: C.ink, lineHeight: 1 }}>
-            Tomoki Uda
+            {P.name_en}
           </div>
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: C.muted, letterSpacing: 1.5, marginTop: 4 }}>
-            DIRECTOR OF EDUCATION
+            {P.dept_en.toUpperCase()}
           </div>
         </div>
         <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: C.navy, textAlign: 'right', lineHeight: 1.4, fontWeight: 500, letterSpacing: 0.2 }}>
-          Mathematics for Social<br/>
-          <span style={{ color: C.muted }}>Implementation Center</span>
+          {P.org_en_short.split('\n')[0]}<br/>
+          <span style={{ color: C.muted }}>{P.org_en_short.split('\n')[1] ?? ''}</span>
         </div>
       </div>
     </div>
@@ -443,7 +449,7 @@ const V5Back = () => (
 );
 
 Object.assign(window, {
-  MaSIC_C: C, CARD_W, CARD_H, BLEED, MaSICLogo,
+  MaSIC_C: C, MaSIC_P: P, CARD_W, CARD_H, BLEED, MaSICLogo,
   V1Front, V1Back, V2Front, V2Back, V3Front, V3Back, V4Front, V4Back, V5Front, V5Back,
   MaSICCard: Card,
 });

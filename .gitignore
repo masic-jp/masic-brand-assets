@@ -5,3 +5,13 @@ __pycache__/
 
 business-card/.design-canvas.state.json
 business-card/uploads/
+
+# Build output (regenerate via business-card/_rebuild.py)
+business-card/dist/
+
+# Personal-info profiles (each user maintains their own locally; example.json is the template)
+business-card/profiles/*.json
+!business-card/profiles/example.json
+
+# Claude Code session-local config
+.claude/

@@ -16,12 +16,14 @@ MaSIC（数理社会実装教育研究センター）のブランドアセット
 │   └── _export_png.py          SVG → PNG 一括書き出しスクリプト
 │
 └── business-card/
-    ├── MaSIC 名刺.html          ソース（Design Exploration ビュー）
-    ├── MaSIC 名刺 - 入稿用.html   ソース（トンボ付き入稿ビュー）
-    ├── cards.jsx               カード V1〜V5 + MaSICLogo コンポーネント
-    ├── design-canvas.jsx       Figma 風キャンバス UI
-    ├── _rebuild.py             standalone を再パックするスクリプト
-    └── dist/                   配布用 standalone HTML（〜2.4MB／本）
+    ├── cards.html             ソース（Design Exploration ビュー）
+    ├── print.html             ソース（トンボ付き入稿ビュー）
+    ├── cards.jsx              カード V1〜V5 + MaSICLogo コンポーネント
+    ├── design-canvas.jsx      Figma 風キャンバス UI
+    ├── _rebuild.py            standalone を再パックするスクリプト
+    ├── _base/                 中立プレースホルダ入りベース standalone（commit）
+    ├── profiles/example.json  個人情報プロファイルのテンプレート
+    └── dist/                  配布用 standalone HTML（gitignore、再生成）
 ```
 
 詳細な開発手順は [`business-card/README.md`](business-card/README.md) 参照。
@@ -39,7 +41,7 @@ paper #FAFAF7  paperWarm #F4F1EA  muted #6B7280
 - 塗り足し: 各辺 +3 mm（97 × 61 mm）
 - トンボ: 仕上がり線から 3 mm 外、長さ 3 mm
 - 表示プレビュー: 4× スケール（PRINT_DPI = 4 px/mm → 364 × 220 px）
-- 入稿は `business-card/dist/MaSIC 名刺 入稿用 - standalone.html` を A4 縦で PDF 書き出し
+- 入稿は `business-card/dist/print-<name>.html`（自分用プロファイルでビルド）を A4 縦で PDF 書き出し
 
 ## ローカル動作確認
 
@@ -52,15 +54,15 @@ python3 -m http.server 8000
 各ページ:
 
 - ソース（編集中の確認）
-  - http://localhost:8000/business-card/MaSIC%20名刺.html
-  - http://localhost:8000/business-card/MaSIC%20名刺%20-%20入稿用.html
-- standalone（最終形の確認）
-  - http://localhost:8000/business-card/dist/MaSIC%20名刺%20-%20standalone.html
-  - http://localhost:8000/business-card/dist/MaSIC%20名刺%20入稿用%20-%20standalone.html
+  - http://localhost:8000/business-card/cards.html
+  - http://localhost:8000/business-card/print.html
+- standalone（最終形の確認、`_rebuild.py` 実行後）
+  - http://localhost:8000/business-card/dist/cards.html
+  - http://localhost:8000/business-card/dist/print.html
 - ロゴプレビュー
   - http://localhost:8000/logo/preview/index.html
 
-`dist/*.html` と `logo/preview/index.html` は `file://` でも開ける（前者は React/Babel/フォントを CDN 経由で取得するためオンライン必須）。`MaSIC 名刺*.html`（ソース）は HTTP サーバ越しでのみ動作。
+`dist/*.html` と `logo/preview/index.html` は `file://` でも開ける（前者は React/Babel/フォントを CDN 経由で取得するためオンライン必須）。`cards.html` / `print.html`（ソース）は HTTP サーバ越しでのみ動作。
 
 ## ビルド
 
