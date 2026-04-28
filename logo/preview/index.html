@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>MaSIC ベクトル化 — Vector deliverables</title>
+<link rel="icon" href="../png/favicon-64.png">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#1E656D;
+    --navy:#152B3B;
+    --red:#C32F30;
+    --ink:#0d0d0d;
+    --paper:#f6f5f0;
+    --paper2:#ecebe4;
+    --line:#dad8cf;
+    --muted:#6b6b66;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family: 'Manrope', -apple-system, system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:64px 40px 120px}
+  header{display:flex;align-items:flex-start;justify-content:space-between;gap:48px;border-bottom:1px solid var(--line);padding-bottom:48px;margin-bottom:64px;flex-wrap:wrap}
+  .title{flex:1 1 480px}
+  .eyebrow{font:500 12px/1 'JetBrains Mono', monospace;color:var(--muted);text-transform:uppercase;letter-spacing:0.14em;margin-bottom:18px}
+  h1{font-size:48px;font-weight:800;line-height:1.05;letter-spacing:-0.025em;margin:0 0 16px}
+  h1 em{font-style:normal;color:var(--muted);font-weight:500}
+  .lede{font-size:16px;color:var(--muted);max-width:520px;margin:0}
+  .header-mark{flex:0 0 200px;display:flex;align-items:center;justify-content:flex-end}
+  .header-mark img{width:160px}
+
+  section + section{margin-top:96px}
+  h2{font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin:0 0 28px;font-family:'JetBrains Mono',monospace}
+  h2 .num{display:inline-block;width:36px;color:var(--ink)}
+
+  /* Hero compare */
+  .hero{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+  .hero > div{padding:48px;display:flex;align-items:center;justify-content:center;min-height:380px;position:relative}
+  .hero > div + div{border-left:1px solid var(--line)}
+  .hero img{max-width:280px;max-height:280px;width:100%;height:auto}
+  .hero .tag{position:absolute;top:18px;left:18px;font:500 11px/1 'JetBrains Mono',monospace;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase}
+
+  /* Geometry breakdown */
+  .pieces{display:grid;grid-template-columns:repeat(4, 1fr);gap:16px;align-items:stretch}
+  .piece{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px}
+  .piece .vis{background:var(--paper2);border-radius:8px;padding:24px;height:200px;display:flex;align-items:center;justify-content:center}
+  .piece .vis svg{max-width:100%;max-height:100%;height:auto;width:auto}
+  .piece h3{margin:0;font-size:15px;font-weight:700}
+  .piece .meta{font:500 11px/1.5 'JetBrains Mono',monospace;color:var(--muted)}
+  .piece .swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+  /* Color palette */
+  .palette{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .swatch-card{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#fff}
+  .swatch-card .chip{height:140px}
+  .swatch-card .body{padding:18px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .swatch-card .body .name{font-weight:700;font-size:15px;margin:0 0 2px}
+  .swatch-card .body .codes{font:500 11px/1.6 'JetBrains Mono',monospace;color:var(--muted)}
+
+  /* Sizes */
+  .sizes{display:flex;align-items:flex-end;gap:32px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:48px;flex-wrap:wrap}
+  .size-item{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .size-item .label{font:500 11px/1 'JetBrains Mono',monospace;color:var(--muted)}
+  .size-item img{display:block}
+
+  /* Downloads */
+  .downloads{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .dl{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 24px;text-decoration:none;color:inherit;transition:transform .15s ease, border-color .15s ease}
+  .dl:hover{transform:translateY(-1px);border-color:#bbb}
+  .dl .left{display:flex;align-items:center;gap:18px}
+  .dl .ico{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--paper2);border-radius:8px;font:600 12px/1 'JetBrains Mono',monospace;color:var(--muted)}
+  .dl .name{font-weight:700;font-size:15px}
+  .dl .sub{font:500 11px/1.4 'JetBrains Mono',monospace;color:var(--muted);margin-top:2px}
+  .dl .arrow{color:var(--muted);font-size:18px}
+
+  /* Notes */
+  .notes{background:#fff;border:1px solid var(--line);border-left:3px solid var(--navy);border-radius:8px;padding:24px 28px;font-size:14px;color:#333}
+  .notes p{margin:0 0 10px}
+  .notes p:last-child{margin-bottom:0}
+  .notes b{color:var(--ink)}
+
+  /* Backgrounds variant */
+  .bg-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .bg-card{border-radius:12px;overflow:hidden;border:1px solid var(--line);height:280px;display:flex;align-items:center;justify-content:center;position:relative}
+  .bg-card img{width:60%;max-width:200px}
+  .bg-card .label{position:absolute;top:14px;left:16px;font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase}
+  .bg-light{background:#fff;color:var(--muted)}
+  .bg-paper{background:var(--paper2);color:var(--muted)}
+  .bg-dark{background:var(--ink);color:rgba(255,255,255,.6)}
+
+  @media (max-width: 880px){
+    .hero,.bg-row,.pieces,.palette,.downloads{grid-template-columns:1fr}
+    .pieces{grid-template-columns:1fr 1fr}
+    .header-mark{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="title">
+      <div class="eyebrow">Vectorization · 2026.04</div>
+      <h1>MaSIC ロゴ <em>ベクトル化</em></h1>
+      <p class="lede">PNG画像のピクセルを実測し、各図形を3次ベジェ曲線で再構築（RMS誤差0.5px未満）。文字は Manrope ExtraBold で再現しました。</p>
+    </div>
+    <div class="header-mark">
+      <img src="../masic-logo.svg" alt="MaSIC vector">
+    </div>
+  </header>
+
+  <!-- 1. Compare -->
+  <section>
+    <h2><span class="num">01</span> 元画像とベクトル版</h2>
+    <div class="hero">
+      <div style="background:#fff">
+        <span class="tag">Original · PNG</span>
+        <img src="../sources/logo-full.png" alt="Original">
+      </div>
+      <div style="background:var(--paper2)">
+        <span class="tag">Vector · SVG</span>
+        <img src="../masic-logo.svg" alt="Vector">
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Geometry -->
+  <section>
+    <h2><span class="num">02</span> 構成図形 <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--muted);font-family:'Manrope',sans-serif">— 実寸・実形状（ベジェフィット版）</span></h2>
+    <div class="pieces">
+      <div class="piece">
+        <div class="vis"><svg viewBox="0 0 116 131" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:auto;height:100%;max-width:100%;max-height:100%"><path fill="#1E656D" d="M 0 0 L 0 131 L 116 131 Z"/></svg></div>
+        <div>
+          <h3>Right triangle</h3>
+          <div class="meta"><span class="swatch" style="background:#1E656D"></span>#1E656D<br>116 × 131</div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="vis"><svg viewBox="0 0 99 87" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;max-height:100%"><path fill="#152B3B" d="M 0 0 L 12 0 C 60.07 -0.57, 96.49 41.89, 99 82 L 99 87 L 0 87 Z"/></svg></div>
+        <div>
+          <h3>Upper navy curve</h3>
+          <div class="meta"><span class="swatch" style="background:#152B3B"></span>#152B3B · 三次ベジェ<br>99 × 87</div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="vis"><svg viewBox="0 0 99 144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:auto;height:100%;max-width:100%"><path fill="#152B3B" d="M 0 0 L 14 0 C 61.80 2.24, 104.21 40.18, 99 87 C 95.63 116.14, 69.37 140.91, 37 144 L 0 144 Z"/></svg></div>
+        <div>
+          <h3>Lower navy curve</h3>
+          <div class="meta"><span class="swatch" style="background:#152B3B"></span>#152B3B · 三次ベジェ×2<br>99 × 144</div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="vis"><svg viewBox="0 0 116 92" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;max-height:100%"><path fill="#C32F30" d="M 3 0 L 113 0 Q 116 0 116 3 C 116.31 40.55, 95.21 74.28, 59 92 C 21.56 75.17, -0.48 40.78, 0 3 Q 0 0 3 0 Z"/></svg></div>
+        <div>
+          <h3>Rounded shield</h3>
+          <div class="meta"><span class="swatch" style="background:#C32F30"></span>#C32F30 · 直線+ベジェ<br>116 × 92</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Palette -->
+  <section>
+    <h2><span class="num">03</span> カラー</h2>
+    <div class="palette">
+      <div class="swatch-card">
+        <div class="chip" style="background:#1E656D"></div>
+        <div class="body">
+          <div><div class="name">Teal</div></div>
+          <div class="codes">HEX&nbsp;&nbsp;#1E656D<br>RGB&nbsp;&nbsp;30 101 109</div>
+        </div>
+      </div>
+      <div class="swatch-card">
+        <div class="chip" style="background:#152B3B"></div>
+        <div class="body">
+          <div><div class="name">Navy</div></div>
+          <div class="codes">HEX&nbsp;&nbsp;#152B3B<br>RGB&nbsp;&nbsp;21 43 59</div>
+        </div>
+      </div>
+      <div class="swatch-card">
+        <div class="chip" style="background:#C32F30"></div>
+        <div class="body">
+          <div><div class="name">Red</div></div>
+          <div class="codes">HEX&nbsp;&nbsp;#C32F30<br>RGB&nbsp;&nbsp;195 47 48</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Backgrounds -->
+  <section>
+    <h2><span class="num">04</span> 背景バリエーション</h2>
+    <div class="bg-row">
+      <div class="bg-card bg-light"><span class="label">Light</span><img src="../masic-logo.svg" alt=""></div>
+      <div class="bg-card bg-paper"><span class="label">Paper</span><img src="../masic-logo.svg" alt=""></div>
+      <div class="bg-card bg-dark"><span class="label">Dark</span><img id="darkLogo" src="../masic-logo.svg" alt="" style="filter:invert(1) hue-rotate(180deg);opacity:.92"></div>
+    </div>
+    <p class="meta" style="font:500 11px/1.6 'JetBrains Mono',monospace;color:var(--muted);margin-top:14px">※ Dark版はCSS反転プレビュー。実用ではテキスト白色版を別途生成してください。</p>
+  </section>
+
+  <!-- 5. Sizes -->
+  <section>
+    <h2><span class="num">05</span> サイズ別バリエーション (アイコン)</h2>
+    <div class="sizes">
+      <div class="size-item"><img src="../png/masic-icon-32.png" width="32"><div class="label">32 · favicon</div></div>
+      <div class="size-item"><img src="../png/masic-icon-64.png" width="64"><div class="label">64</div></div>
+      <div class="size-item"><img src="../png/masic-icon-128.png" width="128"><div class="label">128</div></div>
+      <div class="size-item"><img src="../png/masic-icon-256.png" width="256"><div class="label">256</div></div>
+    </div>
+  </section>
+
+  <!-- 6. Downloads -->
+  <section>
+    <h2><span class="num">06</span> ダウンロード</h2>
+    <div class="downloads">
+      <a class="dl" href="../masic-logo.svg" download>
+        <div class="left"><div class="ico">SVG</div><div><div class="name">フルロゴ (アイコン+MaSIC)</div><div class="sub">masic-logo.svg · 540×420</div></div></div>
+        <div class="arrow">↓</div>
+      </a>
+      <a class="dl" href="../masic-icon.svg" download>
+        <div class="left"><div class="ico">SVG</div><div><div class="name">アイコンのみ</div><div class="sub">masic-icon.svg · 224×243</div></div></div>
+        <div class="arrow">↓</div>
+      </a>
+      <a class="dl" href="../png/masic-logo-1024.png" download>
+        <div class="left"><div class="ico">PNG</div><div><div class="name">フルロゴ 1024px</div><div class="sub">masic-logo-1024.png</div></div></div>
+        <div class="arrow">↓</div>
+      </a>
+      <a class="dl" href="../png/masic-logo-2048.png" download>
+        <div class="left"><div class="ico">PNG</div><div><div class="name">フルロゴ 2048px</div><div class="sub">masic-logo-2048.png</div></div></div>
+        <div class="arrow">↓</div>
+      </a>
+      <a class="dl" href="../png/masic-icon-512.png" download>
+        <div class="left"><div class="ico">PNG</div><div><div class="name">アイコン 512px</div><div class="sub">masic-icon-512.png</div></div></div>
+        <div class="arrow">↓</div>
+      </a>
+      <a class="dl" href="../png/masic-icon-1024.png" download>
+        <div class="left"><div class="ico">PNG</div><div><div class="name">アイコン 1024px</div><div class="sub">masic-icon-1024.png</div></div></div>
+        <div class="arrow">↓</div>
+      </a>
+      <a class="dl" href="../png/favicon-32.png" download>
+        <div class="left"><div class="ico">PNG</div><div><div class="name">Favicon 32×32</div><div class="sub">favicon-32.png</div></div></div>
+        <div class="arrow">↓</div>
+      </a>
+      <a class="dl" href="../png/favicon-64.png" download>
+        <div class="left"><div class="ico">PNG</div><div><div class="name">Favicon 64×64</div><div class="sub">favicon-64.png</div></div></div>
+        <div class="arrow">↓</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 7. Notes -->
+  <section>
+    <h2><span class="num">07</span> 制作メモ</h2>
+    <div class="notes">
+      <p><b>図形（再構築v2）:</b> ピクセル単位で輪郭を抽出し、各曲線に3次ベジェを最小二乗フィット（RMS誤差 0.31〜0.48px）。<br>
+      ・三角形：直角三角形。幅は赤と一致（116px）、藍色領域に侵入しない<br>
+      ・藍色（上）：四半楕円ではなく、最適化された3次ベジェ曲線<br>
+      ・藍色（下）：上下2本の3次ベジェで構成する非対称半円<br>
+      ・赤：頂点を持つ放物線2本（左右）+上端に微小な丸み（角丸2px）。下端は鋭く尖る</p>
+      <p><b>制約:</b> 赤と緑（三角形）が同一幅。藍色上下が同一幅。左右両列の総高さが概ね一致。</p>
+      <p><b>カラー:</b> 元画像のピクセル値をサンプリングし、均一色化（紙質テクスチャを除去）。</p>
+      <p><b>文字:</b> 「MaSIC」の文字幅・x-height・終端形状を計測し Manrope ExtraBold が最も近いと判断。フォントを字形パスに展開しSVGに埋め込み（Manrope未インストール環境でも表示）。</p>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

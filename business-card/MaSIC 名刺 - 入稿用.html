@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MaSIC 名刺 — 入稿用 / Print Ready</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=IBM+Plex+Sans+JP:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Print spec
+     仕上がり: 91 × 55 mm
+     塗り足し: 各辺 +3mm → 97 × 61 mm
+     トンボ: 仕上がり線から 3mm 外 + 3mm の長さ
+     1 枚ごとに A4 縦の中央に配置 */
+  html, body {
+    margin: 0; padding: 0;
+    background: #DDD;
+    font-family: 'Inter', sans-serif;
+    color: #0D1117;
+  }
+  * { box-sizing: border-box; }
+
+  .toolbar {
+    position: sticky; top: 0; z-index: 50;
+    background: #0D1117; color: #FAFAF7;
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 1px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+  }
+  .toolbar .grp { display: flex; gap: 8px; align-items: center; }
+  .toolbar button {
+    background: #FAFAF7; color: #0D1117; border: 0;
+    padding: 8px 14px; border-radius: 2px;
+    font-family: inherit; font-size: 11px; font-weight: 600; letter-spacing: 1px;
+    cursor: pointer; text-transform: uppercase;
+  }
+  .toolbar button:hover { background: #fff; }
+  .toolbar select { background: #1f2937; color: #FAFAF7; border: 1px solid #374151; padding: 6px 10px; font-family: inherit; font-size: 11px; }
+
+  .pages { padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+
+  /* A4: 210 × 297 mm */
+  .page {
+    width: 210mm; height: 297mm;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  /* Card holder centered on page */
+  .card-holder {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* The bleed box: 97 × 61mm (card 91 × 55 + 3mm bleed each side) */
+  .bleed {
+    position: relative;
+    width: 97mm; height: 61mm;
+    overflow: hidden;
+    background: #fff;
+  }
+  /* The trim mark area extends 3mm beyond bleed (so trim marks sit at trim edge) */
+  .trim-area {
+    position: relative;
+    /* additional 6mm so we can draw 3mm-long marks 3mm beyond trim */
+    width: 109mm; height: 73mm;
+  }
+  .bleed-inner {
+    position: absolute; top: 6mm; left: 6mm;
+    width: 97mm; height: 61mm;
+  }
+  /* Card itself: 91 × 55 mm (centered inside bleed) */
+  .card-frame {
+    position: absolute;
+    top: 3mm; left: 3mm;
+    width: 91mm; height: 55mm;
+    overflow: hidden;
+  }
+  /* Crop marks (トンボ): 3mm long, 0.25mm wide, in #000.
+     Sit 3mm outside the trim, oriented toward the corners. */
+  .crop {
+    position: absolute; background: #000;
+  }
+
+  .meta {
+    position: absolute; left: 12mm; bottom: 8mm;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #6B7280; letter-spacing: 1.5px;
+  }
+  .meta-r {
+    position: absolute; right: 12mm; bottom: 8mm;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #6B7280; letter-spacing: 1.5px; text-align: right;
+  }
+  .meta strong, .meta-r strong { color: #0D1117; font-weight: 700; }
+
+  /* Card content scales — cards.jsx renders at 364×220 (4× of 91×55mm).
+     We want it at exactly 91×55mm = 344.0×208.4 pixels at 96dpi.
+     91mm = 91 * 96/25.4 = 343.937 px. So scale = 343.937 / 364 = 0.9449.
+     Use transform scale for accurate rendering. */
+  .card-scale {
+    width: 364px; height: 220px;
+    transform: scale(0.9449);
+    transform-origin: top left;
+  }
+
+  @media print {
+    html, body { background: #fff; }
+    .toolbar { display: none; }
+    .pages { padding: 0; gap: 0; }
+    .page {
+      box-shadow: none;
+      margin: 0;
+      page-break-after: always;
+      width: 210mm; height: 297mm;
+    }
+    .page:last-child { page-break-after: auto; }
+    @page { size: A4; margin: 0; }
+  }
+
+  .filtering .page { display: none; }
+  .filtering .page.show { display: block; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#F5F4EF">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#F5F4EF"/>
+    <g transform="translate(417 200) scale(1.65)" fill-rule="evenodd">
+      <path fill="#1E656D" d="M 0 0 L 0 131 L 116 131 Z"/>
+      <path fill="#152B3B" d="M 123 4 L 135 4 C 183.07 3.43, 219.49 45.89, 222 86 L 222 91 L 123 91 Z"/>
+      <path fill="#152B3B" d="M 123 98 L 137 98 C 184.80 100.24, 227.21 138.18, 222 185 C 218.63 214.14, 192.37 238.91, 160 242 L 123 242 Z"/>
+      <path fill="#C32F30" d="M 3 143 L 113 143 Q 116 143 116 146 C 116.31 183.55, 95.21 217.28, 59 235 C 21.56 218.17, -0.48 183.78, 0 146 Q 0 143 3 143 Z"/>
+    </g>
+    <text x="600" y="680" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="72" fill="#0D1117" letter-spacing="8">MaSIC PRINT</text>
+  </svg>
+</template>
+
+<div class="toolbar">
+  <div class="grp">
+    <strong>MaSIC 名刺 / 入稿用</strong>
+    <span style="opacity:.6">· 91×55mm · 塗り足し 3mm · トンボ付き</span>
+  </div>
+  <div class="grp">
+    <span style="opacity:.6">表示:</span>
+    <select id="filter">
+      <option value="all">All variations</option>
+      <option value="V1">V1 — Classic Mincho</option>
+      <option value="V2">V2 — Modern Geometric</option>
+      <option value="V3">V3 — Editorial Mono</option>
+      <option value="V4">V4 — Bold Display</option>
+      <option value="V5">V5 — Hybrid Mincho × Mono</option>
+    </select>
+    <button onclick="window.print()">Print / PDF</button>
+  </div>
+</div>
+
+<div id="root" class="pages"></div>
+
+<script type="text/babel" src="cards.jsx"></script>
+<script type="text/babel">
+const TrimMarks = () => {
+  // Marks are 3mm long, 0.25mm thick, sitting 3mm outside the trim line.
+  // trim-area is 109×73mm with bleed inside at offset 6mm,6mm size 97×61mm,
+  // and trim inside that at offset 3mm,3mm size 91×55mm.
+  // So trim corners are at:
+  //   top-left:  (9mm, 9mm)
+  //   top-right: (100mm, 9mm)
+  //   bot-left:  (9mm, 64mm)
+  //   bot-right: (100mm, 64mm)
+  const T = '0.25mm';
+  const L = '3mm';
+  const G = '3mm'; // gap between trim and start of mark
+  const corners = [
+    { x: '9mm',   y: '9mm',  side: 'tl' },
+    { x: '100mm', y: '9mm',  side: 'tr' },
+    { x: '9mm',   y: '64mm', side: 'bl' },
+    { x: '100mm', y: '64mm', side: 'br' },
+  ];
+  const marks = [];
+  corners.forEach(c => {
+    const xnum = parseFloat(c.x);
+    const ynum = parseFloat(c.y);
+    // Horizontal mark (going outward from the corner along x)
+    if (c.side[1] === 'l') {
+      marks.push({ left: (xnum - 3 - 3) + 'mm', top: c.y, w: L, h: T, key: c.side+'h' });
+    } else {
+      marks.push({ left: (xnum + 3) + 'mm', top: c.y, w: L, h: T, key: c.side+'h' });
+    }
+    // Vertical mark (going outward from corner along y)
+    if (c.side[0] === 't') {
+      marks.push({ left: c.x, top: (ynum - 3 - 3) + 'mm', w: T, h: L, key: c.side+'v' });
+    } else {
+      marks.push({ left: c.x, top: (ynum + 3) + 'mm', w: T, h: L, key: c.side+'v' });
+    }
+  });
+  return (
+    <>
+      {marks.map(m => (
+        <div key={m.key} className="crop" style={{ left: m.left, top: m.top, width: m.w, height: m.h }}></div>
+      ))}
+    </>
+  );
+};
+
+const Page = ({ variation, side, CardComp }) => {
+  const sideJp = side === 'front' ? '表 / Front (日本語)' : '裏 / Back (English)';
+  return (
+    <div className="page" data-variation={variation} data-side={side}>
+      <div className="card-holder">
+        <div className="trim-area">
+          <TrimMarks />
+          <div className="bleed-inner">
+            <div className="card-frame">
+              <div className="card-scale">
+                <CardComp />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="meta">
+        <div><strong>MaSIC 名刺</strong> · {variation} · {sideJp}</div>
+        <div>仕上がり 91 × 55 mm · 塗り足し 3 mm · CMYK 推奨</div>
+      </div>
+      <div className="meta-r">
+        <div>uda@masic.jp · masic.jp</div>
+        <div>A4 / Print to 100% · No scaling</div>
+      </div>
+    </div>
+  );
+};
+
+const App = () => {
+  const variations = [
+    { id: 'V1', name: 'Classic Mincho',    Front: window.V1Front, Back: window.V1Back },
+    { id: 'V2', name: 'Modern Geometric',  Front: window.V2Front, Back: window.V2Back },
+    { id: 'V3', name: 'Editorial Mono',    Front: window.V3Front, Back: window.V3Back },
+    { id: 'V4', name: 'Bold Display',      Front: window.V4Front, Back: window.V4Back },
+    { id: 'V5', name: 'Mincho × Mono',     Front: window.V5Front, Back: window.V5Back },
+  ];
+  return (
+    <>
+      {variations.map(v => (
+        <React.Fragment key={v.id}>
+          <Page variation={v.id} side="front" CardComp={v.Front} />
+          <Page variation={v.id} side="back"  CardComp={v.Back} />
+        </React.Fragment>
+      ))}
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+// filter
+document.getElementById('filter').addEventListener('change', (e) => {
+  const v = e.target.value;
+  const root = document.getElementById('root');
+  if (v === 'all') {
+    root.classList.remove('filtering');
+    root.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+  } else {
+    root.classList.add('filtering');
+    root.querySelectorAll('.page').forEach(p => {
+      p.classList.toggle('show', p.dataset.variation === v);
+    });
+  }
+});
+</script>
+</body>
+</html>

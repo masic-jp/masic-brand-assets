@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MaSIC 名刺 — Design Exploration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=IBM+Plex+Sans+JP:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F5F4EF; font-family: 'Inter', sans-serif; }
+  * { box-sizing: border-box; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#F5F4EF">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#F5F4EF"/>
+    <g transform="translate(417 200) scale(1.65)" fill-rule="evenodd">
+      <path fill="#1E656D" d="M 0 0 L 0 131 L 116 131 Z"/>
+      <path fill="#152B3B" d="M 123 4 L 135 4 C 183.07 3.43, 219.49 45.89, 222 86 L 222 91 L 123 91 Z"/>
+      <path fill="#152B3B" d="M 123 98 L 137 98 C 184.80 100.24, 227.21 138.18, 222 185 C 218.63 214.14, 192.37 238.91, 160 242 L 123 242 Z"/>
+      <path fill="#C32F30" d="M 3 143 L 113 143 Q 116 143 116 146 C 116.31 183.55, 95.21 217.28, 59 235 C 21.56 218.17, -0.48 183.78, 0 146 Q 0 143 3 143 Z"/>
+    </g>
+    <text x="600" y="680" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="72" fill="#0D1117" letter-spacing="8">MaSIC</text>
+  </svg>
+</template>
+<div id="root"></div>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="cards.jsx"></script>
+<script type="text/babel">
+const { DesignCanvas, DCSection, DCArtboard } = window;
+
+// Print-spec card: 91×55mm at exact display ratio
+const PRINT_DPI = 4; // 4px per mm display preview
+const PRINT_W = 91 * PRINT_DPI;
+const PRINT_H = 55 * PRINT_DPI;
+
+// Each variation pair takes one artboard; render front + back inside it with crop marks framing
+const PairArtboard = ({ Front, Back, note }) => (
+  <div style={{
+    width: 880, height: 320,
+    background: '#F5F4EF',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 56,
+    padding: '32px 40px',
+    fontFamily: 'Inter, sans-serif',
+  }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+      <Front />
+      <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#9CA3AF', letterSpacing: 2, textTransform: 'uppercase' }}>
+        Front · 表面（日本語）
+      </div>
+    </div>
+    <div style={{ width: 1, alignSelf: 'stretch', background: 'rgba(13,17,23,0.08)' }}></div>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+      <Back />
+      <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#9CA3AF', letterSpacing: 2, textTransform: 'uppercase' }}>
+        Back · 裏面（English）
+      </div>
+    </div>
+  </div>
+);
+
+// ───── PRINT-READY single-card view at 1:1 with bleed + crop marks ─────
+const CropMark = ({ style }) => (
+  <div style={{ position: 'absolute', ...style }}>
+    <div style={{ position: 'absolute', background: '#0D1117', ...style.h }}></div>
+    <div style={{ position: 'absolute', background: '#0D1117', ...style.v }}></div>
+  </div>
+);
+
+const PrintCard = ({ Card: CardComp, label }) => {
+  const M = 24; // margin around for crop area
+  const totalW = 364 + M * 2;
+  const totalH = 220 + M * 2;
+  const len = 16, thk = 1;
+  return (
+    <div style={{
+      position: 'relative', width: totalW, height: totalH,
+      background: '#FBFBF7',
+    }}>
+      {/* crop marks at corners */}
+      {[
+        { top: M - len - 4, left: M, w: thk, h: len },
+        { top: M, left: M - len - 4, w: len, h: thk },
+        { top: M - len - 4, left: M + 364 - thk, w: thk, h: len },
+        { top: M, left: M + 364 + 4, w: len, h: thk },
+        { top: M + 220 + 4, left: M, w: thk, h: len },
+        { top: M + 220 - thk, left: M - len - 4, w: len, h: thk },
+        { top: M + 220 + 4, left: M + 364 - thk, w: thk, h: len },
+        { top: M + 220 - thk, left: M + 364 + 4, w: len, h: thk },
+      ].map((m, i) => (
+        <div key={i} style={{ position: 'absolute', background: '#0D1117', top: m.top, left: m.left, width: m.w, height: m.h }}></div>
+      ))}
+      <div style={{ position: 'absolute', top: M, left: M }}>
+        <CardComp />
+      </div>
+      <div style={{ position: 'absolute', bottom: 4, left: M, right: M, display: 'flex', justifyContent: 'space-between', fontFamily: 'JetBrains Mono, monospace', fontSize: 8, color: '#9CA3AF', letterSpacing: 1.5 }}>
+        <span>{label}</span>
+        <span>91 × 55 mm · CMYK</span>
+      </div>
+    </div>
+  );
+};
+
+// ───── Cover artboard: art-direction notes ─────
+const Cover = () => {
+  const swatch = (color, name, hex) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+      <div style={{ width: 38, height: 38, background: color, borderRadius: 2, boxShadow: '0 0 0 1px rgba(0,0,0,0.06)' }}></div>
+      <div>
+        <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 14, color: '#0D1117' }}>{name}</div>
+        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: '#6B7280' }}>{hex}</div>
+      </div>
+    </div>
+  );
+  return (
+    <div style={{
+      width: 1240, height: 460, padding: '44px 56px',
+      background: '#FAFAF7',
+      display: 'flex', gap: 44, alignItems: 'stretch',
+      fontFamily: 'Inter, sans-serif',
+    }}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1.2 }}>
+        <div>
+          <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, color: '#C32F30', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 18 }}>
+            Business Card · 名刺
+          </div>
+          <div style={{ fontFamily: 'Shippori Mincho, serif', fontWeight: 500, fontSize: 64, color: '#0D1117', letterSpacing: 2, lineHeight: 1.05 }}>
+            数学を、<br/>社会の基盤へ。
+          </div>
+          <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 400, fontSize: 17, color: '#6B7280', marginTop: 20, maxWidth: 580, lineHeight: 1.6 }}>
+            5 typographic directions — each pair is a complete card at print-ready 91 × 55 mm.
+          </div>
+        </div>
+        <div>
+          <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: '#9CA3AF', letterSpacing: 2.5, textTransform: 'uppercase', marginBottom: 14 }}>Brand palette · ロゴ由来</div>
+          <div style={{ display: 'flex', gap: 28 }}>
+            {swatch('#1E656D', 'Teal', '#1E656D')}
+            {swatch('#152B3B', 'Navy', '#152B3B')}
+            {swatch('#C32F30', 'Red',  '#C32F30')}
+          </div>
+        </div>
+      </div>
+      <div style={{ width: 1, background: 'rgba(13,17,23,0.08)' }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div>
+          <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: '#9CA3AF', letterSpacing: 2.5, textTransform: 'uppercase', marginBottom: 16 }}>Holder · 名義</div>
+          <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 500, fontSize: 15, color: '#6B7280', letterSpacing: 1, lineHeight: 1.55 }}>
+            一般社団法人<br/>数理社会実装教育研究センター<br/>
+            <span style={{ color: '#C32F30', fontWeight: 700 }}>教育担当理事</span>
+          </div>
+          <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 700, fontSize: 32, color: '#0D1117', letterSpacing: 3, marginTop: 14 }}>
+            宇田 智紀
+          </div>
+          <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#6B7280', marginTop: 4 }}>
+            Tomoki Uda · uda@masic.jp
+          </div>
+        </div>
+        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, color: '#9CA3AF', letterSpacing: 2, lineHeight: 1.8 }}>
+          <div>V1 — Classic Mincho</div>
+          <div>V2 — Modern Geometric</div>
+          <div>V3 — Editorial Mono</div>
+          <div>V4 — Bold Display</div>
+          <div>V5 — Hybrid Mincho × Mono</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const App = () => (
+  <DesignCanvas title="MaSIC 名刺">
+    <DCSection id="overview" title="Overview · 概要">
+      <DCArtboard id="cover" label="Art direction" width={1240} height={460}>
+        <Cover />
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="variations" title="Variations · タイポ別 5 案">
+      <DCArtboard id="v1" label="V1 — Classic Mincho · 明朝の品格" width={1240} height={440}>
+        <PairArtboard Front={window.V1Front} Back={window.V1Back} />
+      </DCArtboard>
+      <DCArtboard id="v2" label="V2 — Modern Geometric · 幾何学的・現代的" width={1240} height={440}>
+        <PairArtboard Front={window.V2Front} Back={window.V2Back} />
+      </DCArtboard>
+      <DCArtboard id="v3" label="V3 — Editorial Mono · 研究室のエディトリアル" width={1240} height={440}>
+        <PairArtboard Front={window.V3Front} Back={window.V3Back} />
+      </DCArtboard>
+      <DCArtboard id="v4" label="V4 — Bold Display · 大胆なディスプレイ" width={1240} height={440}>
+        <PairArtboard Front={window.V4Front} Back={window.V4Back} />
+      </DCArtboard>
+      <DCArtboard id="v5" label="V5 — Hybrid Mincho × Mono · 縦書き × 等幅" width={1240} height={440}>
+        <PairArtboard Front={window.V5Front} Back={window.V5Back} />
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="print" title="Print-ready · 入稿用（トンボ付き）">
+      <DCArtboard id="p1" label="V1 · 表 / Front" width={620} height={400}>
+        <PrintCard Card={window.V1Front} label="V1.front" />
+      </DCArtboard>
+      <DCArtboard id="p1b" label="V1 · 裏 / Back" width={620} height={400}>
+        <PrintCard Card={window.V1Back} label="V1.back" />
+      </DCArtboard>
+      <DCArtboard id="p2" label="V2 · 表 / Front" width={620} height={400}>
+        <PrintCard Card={window.V2Front} label="V2.front" />
+      </DCArtboard>
+      <DCArtboard id="p2b" label="V2 · 裏 / Back" width={620} height={400}>
+        <PrintCard Card={window.V2Back} label="V2.back" />
+      </DCArtboard>
+      <DCArtboard id="p3" label="V3 · 表 / Front" width={620} height={400}>
+        <PrintCard Card={window.V3Front} label="V3.front" />
+      </DCArtboard>
+      <DCArtboard id="p3b" label="V3 · 裏 / Back" width={620} height={400}>
+        <PrintCard Card={window.V3Back} label="V3.back" />
+      </DCArtboard>
+      <DCArtboard id="p4" label="V4 · 表 / Front" width={620} height={400}>
+        <PrintCard Card={window.V4Front} label="V4.front" />
+      </DCArtboard>
+      <DCArtboard id="p4b" label="V4 · 裏 / Back" width={620} height={400}>
+        <PrintCard Card={window.V4Back} label="V4.back" />
+      </DCArtboard>
+      <DCArtboard id="p5" label="V5 · 表 / Front" width={620} height={400}>
+        <PrintCard Card={window.V5Front} label="V5.front" />
+      </DCArtboard>
+      <DCArtboard id="p5b" label="V5 · 裏 / Back" width={620} height={400}>
+        <PrintCard Card={window.V5Back} label="V5.back" />
+      </DCArtboard>
+    </DCSection>
+  </DesignCanvas>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
