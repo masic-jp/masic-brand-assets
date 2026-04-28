@@ -1,18 +1,30 @@
-"""Patch the Design-Canvas standalone bundles in place.
+"""Patch the Design-Canvas standalone bundles into `dist/`.
 
-For each bundle:
-- replace the embedded `__bundler/template` with the latest source HTML
-- re-pack the cards.jsx / design-canvas.jsx manifest entries (gzip + base64)
-- preserve everything else (fonts, React/Babel, manifest entry order)
+Reads base bundles from `_base/` (committed; neutral / no personal info),
+patches their template + manifest with the current source HTML and JSX,
+and writes the result to `dist/` (gitignored).
+
+With `--profile path/to/foo.json`, prepend `window.__MaSIC_PROFILE = {...};`
+to cards.jsx before gzipping. cards.jsx merges that over its placeholder `P`,
+so the profile values are baked into the dist bundles. Output filenames get
+a `-foo` suffix; without `--profile`, dist bundles show neutral placeholders.
 """
-import json, gzip, base64, re, os, pathlib
+import argparse, json, gzip, base64, re, os, pathlib
 
 ROOT = pathlib.Path(__file__).parent
+BASE = ROOT / "_base"
 DIST = ROOT / "dist"
 JSX_SIGNATURES = {
     "cards.jsx":         "// MaSIC 名刺 — type-forward",
     "design-canvas.jsx": "// DesignCanvas.jsx",
 }
+
+ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+ap.add_argument("--profile", type=pathlib.Path, default=None,
+                help="JSON profile to inject into cards.jsx (e.g. profiles/uda.json)")
+args = ap.parse_args()
+profile = json.loads(args.profile.read_text(encoding="utf-8")) if args.profile else None
+profile_suffix = f"-{args.profile.stem}" if args.profile else ""
 
 def detect_uuids(manifest):
     out = {}
@@ -29,8 +41,9 @@ def detect_uuids(manifest):
                 out[fname] = uuid
     return out  # missing entries are fine — not every bundle ships every jsx
 PAIRS = [
-    ("MaSIC 名刺.html",         "MaSIC 名刺 - standalone.html"),
-    ("MaSIC 名刺 - 入稿用.html", "MaSIC 名刺 入稿用 - standalone.html"),
+    # (source_html_in_root, base_bundle_in_BASE, output_template_in_DIST_with_{suffix})
+    ("cards.html", "cards.html", "cards{suffix}.html"),
+    ("print.html", "print.html", "print{suffix}.html"),
 ]
 
 def repack(text: str) -> str:
@@ -38,7 +51,12 @@ def repack(text: str) -> str:
     return base64.b64encode(gzip.compress(raw)).decode("ascii")
 
 def patch_block(bundle: str, tag: str, new_inner: str) -> str:
-    pat = re.compile(rf'(<script type="{tag}">)(.*?)(</script>)', re.DOTALL)
+    # HTML5 ends a <script> only when </script> is followed by whitespace, ">", or "/".
+    # The bundler relies on this: JSON-encoded content can contain `</script>` (the
+    # surrounding JSON quote means the next char is literal backslash-n, which is
+    # NOT a terminator). So the regex must require a real terminator after </script>
+    # to avoid matching the FIRST inner pseudo-close instead of the real one.
+    pat = re.compile(rf'(<script type="{tag}">)(.*?)(</script>(?=[\s/>]))', re.DOTALL)
     n = 0
     def sub(m):
         nonlocal n
@@ -50,9 +68,10 @@ def patch_block(bundle: str, tag: str, new_inner: str) -> str:
     return out
 
 DIST.mkdir(exist_ok=True)
-for src_html, bundle_html in PAIRS:
+for src_html, base_bundle_html, out_template in PAIRS:
     src_text = (ROOT / src_html).read_text(encoding="utf-8")
-    bundle_text = (DIST / bundle_html).read_text(encoding="utf-8")
+    bundle_text = (BASE / base_bundle_html).read_text(encoding="utf-8")
+    out_html = out_template.format(suffix=profile_suffix)
 
     # 1) update jsx assets in the manifest, then rewrite filename-based
     #    `src="cards.jsx"` references in the new template to point at the
@@ -63,6 +82,11 @@ for src_html, bundle_html in PAIRS:
     uuids = detect_uuids(manifest)
     for fname, uuid in uuids.items():
         new_text = (ROOT / fname).read_text(encoding="utf-8")
+        if profile is not None and fname == "cards.jsx":
+            new_text = (
+                f"window.__MaSIC_PROFILE = {json.dumps(profile, ensure_ascii=False)};\n"
+                + new_text
+            )
         manifest[uuid]["data"] = repack(new_text)
         manifest[uuid]["compressed"] = True
         # rewrite src="cards.jsx" → src="<uuid>" (and likewise for design-canvas.jsx)
@@ -80,5 +104,5 @@ for src_html, bundle_html in PAIRS:
     bundle_text = patch_block(bundle_text, "__bundler/manifest", new_manifest)
 
 
-    (DIST / bundle_html).write_text(bundle_text, encoding="utf-8")
-    print(f"rebuilt: dist/{bundle_html}  ({len(bundle_text):,} bytes)")
+    (DIST / out_html).write_text(bundle_text, encoding="utf-8")
+    print(f"rebuilt: dist/{out_html}  ({len(bundle_text):,} bytes)")

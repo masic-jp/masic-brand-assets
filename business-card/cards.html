@@ -32,7 +32,7 @@
 <script type="text/babel" src="design-canvas.jsx"></script>
 <script type="text/babel" src="cards.jsx"></script>
 <script type="text/babel">
-const { DesignCanvas, DCSection, DCArtboard } = window;
+const { DesignCanvas, DCSection, DCArtboard, MaSIC_P } = window;
 
 // Print-spec card: 91×55mm at exact display ratio
 const PRINT_DPI = 4; // 4px per mm display preview
@@ -150,14 +150,14 @@ const Cover = () => {
         <div>
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: '#9CA3AF', letterSpacing: 2.5, textTransform: 'uppercase', marginBottom: 16 }}>Holder · 名義</div>
           <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 500, fontSize: 15, color: '#6B7280', letterSpacing: 1, lineHeight: 1.55 }}>
-            一般社団法人<br/>数理社会実装教育研究センター<br/>
-            <span style={{ color: '#C32F30', fontWeight: 700 }}>教育担当理事</span>
+            {MaSIC_P.org_jp}<br/>{MaSIC_P.org_jp2}<br/>
+            <span style={{ color: '#C32F30', fontWeight: 700 }}>{MaSIC_P.dept_jp}</span>
           </div>
           <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 700, fontSize: 32, color: '#0D1117', letterSpacing: 3, marginTop: 14 }}>
-            宇田 智紀
+            {MaSIC_P.name_jp}
           </div>
           <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#6B7280', marginTop: 4 }}>
-            Tomoki Uda · uda@masic.jp
+            {MaSIC_P.name_en} · {MaSIC_P.email}
           </div>
         </div>
         <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, color: '#9CA3AF', letterSpacing: 2, lineHeight: 1.8 }}>
