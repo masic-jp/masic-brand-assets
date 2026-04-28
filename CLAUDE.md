@@ -26,6 +26,12 @@ MaSIC（数理社会実装教育研究センター）のブランドアセット
 
 編集対象は **ソース HTML 2 本 + JSX 2 本 + SVG 2 本** のみ。`dist/` と `png/` は派生物（ただしコミット対象）。
 
+## ローカル動作確認
+
+ソース HTML（`business-card/MaSIC 名刺*.html`）は Babel が JSX を fetch するため **HTTP サーバが必要**（`file://` 不可）。リポジトリルートで `python3 -m http.server 8000` を起動して http://localhost:8000/ から各ページを開く。詳細は [`business-card/CLAUDE.md`](business-card/CLAUDE.md) 参照。
+
+`dist/*.html` と `logo/preview/index.html` は `file://` で直接開いても表示できる。
+
 ## ロゴはコード内に inline SVG（手動同期）
 
 `business-card/cards.jsx` の `MaSICLogo` コンポーネントは `logo/masic-icon.svg` のパスを inline で持つ。Design Canvas の standalone は外部 SVG 参照ではなくランタイムで JSX を評価する単一 HTML として完結させたいため。
