@@ -219,7 +219,7 @@ const V3Front = () => (
       </div>
       <div>
         <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: C.red, letterSpacing: 1.5, marginBottom: 8, fontWeight: 600 }}>
-          → {P.dept_jp} / DIRECTOR
+          → {P.dept_jp} / {P.dept_en.split(' ')[0].toUpperCase()}
         </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
           <div style={{ fontFamily: 'IBM Plex Sans JP, sans-serif', fontWeight: 600, fontSize: 32, color: C.ink, letterSpacing: 4, lineHeight: 1 }}>
