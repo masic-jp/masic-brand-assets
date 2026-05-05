@@ -113,10 +113,13 @@ const V1Front = () => (
         </div>
         <div>
           <div style={{ fontFamily: 'Noto Serif JP, serif', fontWeight: 500, fontSize: 13, color: C.ink, letterSpacing: 1, marginBottom: 6 }}>
-            {P.dept_jp}{P.degree_jp && <span style={{ color: C.muted, marginLeft: 8, fontSize: 11, letterSpacing: 0.5 }}>{P.degree_jp}</span>}
+            {P.dept_jp}
           </div>
-          <div style={{ fontFamily: 'Noto Serif JP, serif', fontWeight: 500, fontSize: 32, color: C.ink, letterSpacing: 0.5, lineHeight: 1 }}>
-            {P.name_jp}
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+            <div style={{ fontFamily: 'Noto Serif JP, serif', fontWeight: 500, fontSize: 32, color: C.ink, letterSpacing: 0.5, lineHeight: 1 }}>
+              {P.name_jp}
+            </div>
+            {P.degree_jp && <span style={{ fontFamily: 'Noto Serif JP, serif', fontSize: 12, color: C.muted, letterSpacing: 0.5 }}>{P.degree_jp}</span>}
           </div>
           <div style={{ fontFamily: 'EB Garamond, serif', fontStyle: 'italic', fontSize: 13, color: C.muted, letterSpacing: 1, marginTop: 6 }}>
             {P.name_en}
@@ -257,12 +260,13 @@ const V3Front = () => (
       </div>
       <div>
         <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: C.ink, letterSpacing: 1, marginBottom: 8, fontWeight: 600 }}>
-          → {P.dept_jp}{P.degree_jp && ` · ${P.degree_jp}`} / {P.dept_en.split(' ')[0].toUpperCase()}
+          → {P.dept_jp} / {P.dept_en.split(' ')[0].toUpperCase()}
         </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
           <div style={{ fontFamily: 'IBM Plex Sans JP, sans-serif', fontWeight: 600, fontSize: 32, color: C.ink, letterSpacing: 0.5, lineHeight: 1 }}>
             {P.name_jp}
           </div>
+          {P.degree_jp && <span style={{ fontFamily: 'IBM Plex Sans JP, sans-serif', fontWeight: 500, fontSize: 12, color: C.muted, letterSpacing: 0.5 }}>{P.degree_jp}</span>}
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, fontSize: 16, color: C.muted }}>
             {P.name_en}
           </div>
