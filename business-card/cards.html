@@ -166,6 +166,7 @@ const Cover = () => {
           <div>V3 — Editorial Mono</div>
           <div>V4 — Bold Display</div>
           <div>V5 — Hybrid Mincho × Mono</div>
+          <div>V6 — V1 表 × ででーん裏</div>
         </div>
       </div>
     </div>
@@ -195,6 +196,9 @@ const App = () => (
       </DCArtboard>
       <DCArtboard id="v5" label="V5 — Hybrid Mincho × Mono · 縦書き × 等幅" width={1240} height={440}>
         <PairArtboard Front={window.V5Front} Back={window.V5Back} />
+      </DCArtboard>
+      <DCArtboard id="v6" label="V6 — V1 表 × ででーん裏" width={1240} height={440}>
+        <PairArtboard Front={window.V6Front} Back={window.V6Back} />
       </DCArtboard>
     </DCSection>
 
@@ -228,6 +232,12 @@ const App = () => (
       </DCArtboard>
       <DCArtboard id="p5b" label="V5 · 裏 / Back" width={620} height={400}>
         <PrintCard Card={window.V5Back} label="V5.back" />
+      </DCArtboard>
+      <DCArtboard id="p6" label="V6 · 表 / Front" width={620} height={400}>
+        <PrintCard Card={window.V6Front} label="V6.front" />
+      </DCArtboard>
+      <DCArtboard id="p6b" label="V6 · 裏 / Back" width={620} height={400}>
+        <PrintCard Card={window.V6Back} label="V6.back" />
       </DCArtboard>
     </DCSection>
   </DesignCanvas>

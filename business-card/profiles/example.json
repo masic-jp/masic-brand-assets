@@ -3,6 +3,8 @@
   "name_en": "Your Name",
   "dept_jp": "役職",
   "dept_en": "Your Title",
+  "degree_jp": "",
+  "degree_en": "",
   "email":   "name@example.com",
   "web":     "example.com"
 }
