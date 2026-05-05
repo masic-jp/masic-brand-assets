@@ -2,13 +2,19 @@
 
 MaSIC 名刺のソース HTML / JSX と配布用 standalone HTML を管理する。
 
+> **現在の状態**（2026-05）
+>
+> タイポ探索で検討した V1〜V6 のうち、「**V6 — V1 表 × ででーん裏**」を採用案として残し、それ以外の案はソース（`cards.html`）から削除済み。現在は V6 をベースに入稿に向けた調整中。
+>
+> `cards.jsx` には V1〜V5 のコンポーネント定義は参考として残してある（V6Front が V1Front を流用するため）。
+
 ## 構成
 
 | パス | 種別 | 説明 |
 |---|---|---|
 | `cards.html` | ソース | Design Exploration ビュー（Babel inline で JSX を読み込み） |
 | `print.html` | ソース | トンボ付き入稿ビュー |
-| `cards.jsx` | ソース | カード V1〜V5 + `MaSICLogo` コンポーネント定義 |
+| `cards.jsx` | ソース | カード V1〜V6 + `MaSICLogo` コンポーネント定義（採用案は V6） |
 | `design-canvas.jsx` | ソース | Figma 風キャンバス UI（Section / Artboard / PostIt） |
 | `_rebuild.py` | スクリプト | ソースから standalone を再パック（`--profile` で個人情報を差し替え） |
 | `_base/cards.html`, `_base/print.html` | ソース | 中立プレースホルダ入りベース standalone（commit 対象。`_rebuild.py` の入力） |
@@ -57,7 +63,7 @@ python3 _rebuild.py --profile profiles/yamada.json
 - `dist/cards-yamada.html`
 - `dist/print-yamada.html`
 
-`--profile` を省略すると `dist/cards.html` / `dist/print.html` が中立プレースホルダ（`お名前 / Your Name / name@example.com`）で生成される。
+`--profile` を省略すると `dist/cards.html` / `dist/print.html` が中立プレースホルダ（`お名前 / Your Name / name@masic.jp`）で生成される。
 
 `profiles/<name>.json` は `.gitignore` 拾いで untracked。各人がローカルに自分用を保持し、commit はしない。
 

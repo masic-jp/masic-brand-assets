@@ -51,14 +51,14 @@ const PairArtboard = ({ Front, Back, note }) => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
       <Front />
       <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#9CA3AF', letterSpacing: 2, textTransform: 'uppercase' }}>
-        Front · 表面（日本語）
+        Front · 表面（個人情報）
       </div>
     </div>
     <div style={{ width: 1, alignSelf: 'stretch', background: 'rgba(13,17,23,0.08)' }}></div>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
       <Back />
       <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#9CA3AF', letterSpacing: 2, textTransform: 'uppercase' }}>
-        Back · 裏面（English）
+        Back · 裏面（組織情報）
       </div>
     </div>
   </div>
@@ -129,11 +129,17 @@ const Cover = () => {
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, color: '#C32F30', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 18 }}>
             Business Card · 名刺
           </div>
-          <div style={{ fontFamily: 'Shippori Mincho, serif', fontWeight: 500, fontSize: 64, color: '#0D1117', letterSpacing: 2, lineHeight: 1.05 }}>
-            数学を、<br/>社会の基盤へ。
+          <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 900, fontSize: 64, color: '#0f172a', letterSpacing: 0, lineHeight: 1.1 }}>
+            数学を、<br/>
+            <span style={{
+              background: 'linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}>社会の基盤</span>へ。
           </div>
           <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 400, fontSize: 17, color: '#6B7280', marginTop: 20, maxWidth: 580, lineHeight: 1.6 }}>
-            5 typographic directions — each pair is a complete card at print-ready 91 × 55 mm.
+            V6 採用案をベースに入稿準備中。完成サイズ 91 × 55 mm、表面は明朝・V1 表植え、裏面はキャッチコピーと QR。
           </div>
         </div>
         <div>
@@ -143,6 +149,10 @@ const Cover = () => {
             {swatch('#152B3B', 'Navy', '#152B3B')}
             {swatch('#C32F30', 'Red',  '#C32F30')}
           </div>
+          <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: '#9CA3AF', letterSpacing: 2.5, textTransform: 'uppercase', marginTop: 22, marginBottom: 14 }}>Accent · キャッチコピー</div>
+          <div style={{ display: 'flex', gap: 28 }}>
+            {swatch('linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%)', 'Sky → Blue', '#0EA5E9 → #3B82F6')}
+          </div>
         </div>
       </div>
       <div style={{ width: 1, background: 'rgba(13,17,23,0.08)' }}></div>
@@ -151,7 +161,7 @@ const Cover = () => {
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: '#9CA3AF', letterSpacing: 2.5, textTransform: 'uppercase', marginBottom: 16 }}>Holder · 名義</div>
           <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 500, fontSize: 15, color: '#6B7280', letterSpacing: 1, lineHeight: 1.55 }}>
             {MaSIC_P.org_jp}<br/>{MaSIC_P.org_jp2}<br/>
-            <span style={{ color: '#C32F30', fontWeight: 700 }}>{MaSIC_P.dept_jp}</span>
+            <span style={{ color: '#6B7280', fontWeight: 700 }}>{MaSIC_P.dept_jp}</span>
           </div>
           <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 700, fontSize: 32, color: '#0D1117', letterSpacing: 3, marginTop: 14 }}>
             {MaSIC_P.name_jp}
@@ -161,11 +171,6 @@ const Cover = () => {
           </div>
         </div>
         <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, color: '#9CA3AF', letterSpacing: 2, lineHeight: 1.8 }}>
-          <div>V1 — Classic Mincho</div>
-          <div>V2 — Modern Geometric</div>
-          <div>V3 — Editorial Mono</div>
-          <div>V4 — Bold Display</div>
-          <div>V5 — Hybrid Mincho × Mono</div>
           <div>V6 — V1 表 × ででーん裏</div>
         </div>
       </div>
@@ -181,58 +186,13 @@ const App = () => (
       </DCArtboard>
     </DCSection>
 
-    <DCSection id="variations" title="Variations · タイポ別 5 案">
-      <DCArtboard id="v1" label="V1 — Classic Mincho · 明朝の品格" width={1240} height={440}>
-        <PairArtboard Front={window.V1Front} Back={window.V1Back} />
-      </DCArtboard>
-      <DCArtboard id="v2" label="V2 — Modern Geometric · 幾何学的・現代的" width={1240} height={440}>
-        <PairArtboard Front={window.V2Front} Back={window.V2Back} />
-      </DCArtboard>
-      <DCArtboard id="v3" label="V3 — Editorial Mono · 研究室のエディトリアル" width={1240} height={440}>
-        <PairArtboard Front={window.V3Front} Back={window.V3Back} />
-      </DCArtboard>
-      <DCArtboard id="v4" label="V4 — Bold Display · 大胆なディスプレイ" width={1240} height={440}>
-        <PairArtboard Front={window.V4Front} Back={window.V4Back} />
-      </DCArtboard>
-      <DCArtboard id="v5" label="V5 — Hybrid Mincho × Mono · 縦書き × 等幅" width={1240} height={440}>
-        <PairArtboard Front={window.V5Front} Back={window.V5Back} />
-      </DCArtboard>
+    <DCSection id="variations" title="Variations">
       <DCArtboard id="v6" label="V6 — V1 表 × ででーん裏" width={1240} height={440}>
         <PairArtboard Front={window.V6Front} Back={window.V6Back} />
       </DCArtboard>
     </DCSection>
 
     <DCSection id="print" title="Print-ready · 入稿用（トンボ付き）">
-      <DCArtboard id="p1" label="V1 · 表 / Front" width={620} height={400}>
-        <PrintCard Card={window.V1Front} label="V1.front" />
-      </DCArtboard>
-      <DCArtboard id="p1b" label="V1 · 裏 / Back" width={620} height={400}>
-        <PrintCard Card={window.V1Back} label="V1.back" />
-      </DCArtboard>
-      <DCArtboard id="p2" label="V2 · 表 / Front" width={620} height={400}>
-        <PrintCard Card={window.V2Front} label="V2.front" />
-      </DCArtboard>
-      <DCArtboard id="p2b" label="V2 · 裏 / Back" width={620} height={400}>
-        <PrintCard Card={window.V2Back} label="V2.back" />
-      </DCArtboard>
-      <DCArtboard id="p3" label="V3 · 表 / Front" width={620} height={400}>
-        <PrintCard Card={window.V3Front} label="V3.front" />
-      </DCArtboard>
-      <DCArtboard id="p3b" label="V3 · 裏 / Back" width={620} height={400}>
-        <PrintCard Card={window.V3Back} label="V3.back" />
-      </DCArtboard>
-      <DCArtboard id="p4" label="V4 · 表 / Front" width={620} height={400}>
-        <PrintCard Card={window.V4Front} label="V4.front" />
-      </DCArtboard>
-      <DCArtboard id="p4b" label="V4 · 裏 / Back" width={620} height={400}>
-        <PrintCard Card={window.V4Back} label="V4.back" />
-      </DCArtboard>
-      <DCArtboard id="p5" label="V5 · 表 / Front" width={620} height={400}>
-        <PrintCard Card={window.V5Front} label="V5.front" />
-      </DCArtboard>
-      <DCArtboard id="p5b" label="V5 · 裏 / Back" width={620} height={400}>
-        <PrintCard Card={window.V5Back} label="V5.back" />
-      </DCArtboard>
       <DCArtboard id="p6" label="V6 · 表 / Front" width={620} height={400}>
         <PrintCard Card={window.V6Front} label="V6.front" />
       </DCArtboard>

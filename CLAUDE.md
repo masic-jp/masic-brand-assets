@@ -13,9 +13,7 @@
 
 ## ロゴ SVG はコード内に inline（手動同期必須）
 
-`business-card/cards.jsx` の `MaSICLogo` コンポーネントは `logo/masic-icon.svg` のパスを **inline SVG** で持つ（`<img src=...>` で参照していない）。
-
-**Why**: `business-card/dist/*.html`（standalone）はランタイムで JSX を評価する単一 HTML として完結させたいので、外部 SVG 参照にできない。
+`business-card/cards.jsx` の `MaSICLogo` コンポーネントは `logo/masic-icon.svg` を **inline SVG** で持つ（`dist/*.html` が外部ファイル参照なしで自己完結するため、`<img src=...>` では参照できない）。
 
 ロゴを差し替える際の作業順:
 
@@ -38,7 +36,7 @@
 
 ## ソース編集後は `_rebuild.py` を回す
 
-JSX / ソース HTML を編集しただけでは `business-card/dist/*.html` には反映されない。**ソースを変更したら必ず** `cd business-card && python3 _rebuild.py` を実行して standalone を再パックする（CI などでの自動化はしていない）。
+JSX / ソース HTML を編集しただけでは `business-card/dist/*.html` には反映されない。**ソースを変更したら必ず** `cd business-card && python3 _rebuild.py` を実行して standalone を再パックする。
 
 別人の名刺を出すときは `python3 _rebuild.py --profile profiles/<name>.json` で `dist/cards-<name>.html` / `dist/print-<name>.html` が出力される。プロファイル機構の詳細は [business-card/README.md](business-card/README.md) を参照。
 
@@ -46,11 +44,9 @@ JSX / ソース HTML を編集しただけでは `business-card/dist/*.html` に
 
 `cards.jsx` の `const P = {...}` は IIFE で `window.__MaSIC_PROFILE` を中立プレースホルダ defaults にマージして返す形。`_rebuild.py --profile` は `cards.jsx` を gzip する**直前**に `window.__MaSIC_PROFILE = {...};\n` を 1 行プリペンドするだけ。
 
-`P` 自体も `window.MaSIC_P` として export されており、`cards.html` の specimen 表示と `print.html` の印刷フッターはここから個人情報を引いている（ソース HTML 側にハードコードされた個人情報は無い）。
+`P` 自体も `window.MaSIC_P` として export されており、`cards.html` の specimen 表示と `print.html` の印刷フッターはここから個人情報を引いている。
 
-**Why**: standalone HTML を「自己完結 1 ファイル」のまま個人情報だけ差し替えたい。注入をビルド時にすることで、入稿用 PDF 化のときに URL クエリや UI 状態を気にせず済む。さらに `_base/*.html` および `cards.jsx` / ソース HTML を中立プレースホルダで commit する設計で、リポジトリ自体に個人情報を残さない（Level 2 スクラブ）。
-
-ハードコードを増やすときの注意: `cards.jsx` 内の氏名・役職・メール表示は **必ず `{P.foo}` 経由**、`cards.html` / `print.html` 側は **必ず `{window.MaSIC_P.foo}` 経由**にすること。`P` / `MaSIC_P` を経由しないリテラルが残るとプロファイルで上書きできなくなる上、リポジトリに個人情報がリークする。
+**ハードコード禁止**: `cards.jsx` 内の氏名・役職・メール表示は **必ず `{P.foo}` 経由**、`cards.html` / `print.html` 側は **必ず `{window.MaSIC_P.foo}` 経由**にすること。`P` / `MaSIC_P` を経由しないリテラルが残るとプロファイルで上書きできなくなる上、リポジトリに個人情報がリークする。
 
 ## standalone HTML 内部構造（`_rebuild.py` メンテ時に参照）
 
@@ -61,15 +57,17 @@ JSX / ソース HTML を編集しただけでは `business-card/dist/*.html` に
 - `<script type="__bundler/template">` — ソース HTML を **JSON エンコードした文字列**。`/` は `\/` にエスケープ（埋め込み HTML 内の `</script>` が外側 script タグを閉じないようにするため）
 - ブートストラップ `<script>` — DOMContentLoaded 後に manifest を atob → DecompressionStream で展開 → `URL.createObjectURL` で blob URL を作り、template 内の **UUID 文字列を全置換**で blob URL に差し替えてから `DOMParser` で再パースして `documentElement.replaceWith` する
 
-つまり template には `<script src="cards.jsx">` ではなく `<script src="<UUID>">` の形で UUID が直書きされている必要がある。UUID は standalone ごとに異なる（`_base/cards.html` と `_base/print.html` で別 UUID）ため、`_rebuild.py` はハードコードせず、JSX 先頭コメント署名（`// MaSIC 名刺` / `// DesignCanvas.jsx`）でファイル名にマップしている。
+template には `<script src="cards.jsx">` ではなく `<script src="<UUID>">` の形で UUID が直書きされている必要がある。UUID は standalone ごとに異なる（`_base/cards.html` と `_base/print.html` で別 UUID）ため、`_rebuild.py` はハードコードせず、JSX 先頭コメント署名（`// MaSIC 名刺` / `// DesignCanvas.jsx`）でファイル名にマップしている。
 
 ## `_base/` と `dist/` の関係
 
-`_rebuild.py` は `_base/<name>.html` を読んで `dist/<name>.html`（ないし `dist/<name>-<profile>.html`）に書き出す。`_base/` は commit 対象で中立プレースホルダ状態に固定、`dist/` は `.gitignore` 拾いで各人ローカル。`_base/` は Anthropic Design Canvas で再生成した standalone を貼り直すこと以外、基本的に書き換えない（cards.jsx / ソース HTML を変えても自動同期はしない）。`_base/` 自体を中立に保つ手順は: `_rebuild.py` を実行 → `dist/cards.html` / `dist/print.html` が中立で出力される → それを `_base/` にコピーする。
+`_rebuild.py` は `_base/<name>.html` を読んで `dist/<name>.html`（ないし `dist/<name>-<profile>.html`）に書き出す。`_base/` は commit 対象で中立プレースホルダ状態に固定、`dist/` は `.gitignore` 拾いで各人ローカル。`_base/` は Anthropic Design Canvas で再生成した standalone を貼り直す以外は書き換えない（`cards.jsx` / ソース HTML を変えても `_base/` は自動同期しない）。
+
+`_base/` を更新する手順: `_rebuild.py` を実行 → `dist/cards.html` / `dist/print.html` が中立で出力される → それを `_base/` にコピーする。
 
 ### `_rebuild.py` のリミテーション
 
-オリジナルのバンドラは `<link href="https://fonts.googleapis.com/...">` を **インライン化された `@font-face` ブロック**（manifest 内の woff2 を UUID 経由で参照）に置き換える処理を行うが、`_rebuild.py` はそれをやっていない。よって rebuild 後の standalone は:
+`_rebuild.py` は Google Fonts のインライン化をしない。rebuild 後の standalone は:
 
 - `cards.jsx` / `design-canvas.jsx` は manifest からインラインで読み込まれる（オフライン OK）
 - React / ReactDOM / Babel / Google Fonts は CDN 参照のまま（**オフラインだとフォントとライブラリが落ちて表示が崩れる**）

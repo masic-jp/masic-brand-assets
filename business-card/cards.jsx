@@ -60,12 +60,12 @@ const P = (() => {
     org_en_legal: 'General Incorporated Association',
     dept_jp: '役職',
     dept_en: 'Your Title',
-    degree_jp: '',
-    degree_en: '',
+    degree_jp: '博士（理学）',
+    degree_en: 'Ph.D.',
     name_jp: 'お名前',
     name_en: 'Your Name',
-    email:   'name@example.com',
-    web:     'example.com',
+    email:   'name@masic.jp',
+    web:     'masic.jp',
   };
   const profile = (typeof window !== 'undefined' && window.__MaSIC_PROFILE) || {};
   return { ...defaults, ...profile };
@@ -513,10 +513,10 @@ const V6Back = () => (
       <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 500, fontSize: 9, color: '#0f172a', opacity: 0.85, letterSpacing: 0, lineHeight: 1.6, maxWidth: 234, marginTop: 6 }}>
         数理科学が持つ力を、教育と社会実装を通じて広く届け、<br/>数学で課題を解く次世代の人材を育成します。
       </div>
-      <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 600, fontSize: 9, color: C.navy, opacity: 0.88, letterSpacing: 0.5, lineHeight: 1.5, maxWidth: 234, marginTop: 14 }}>
+      <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 600, fontSize: 9, color: C.navy, opacity: 0.88, letterSpacing: 0.5, lineHeight: 1.5, maxWidth: 234, marginTop: 14, marginLeft: 8 }}>
         一般社団法人 数理社会実装教育研究センター
       </div>
-      <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: 8, color: C.navy, opacity: 0.6, letterSpacing: 0.2, lineHeight: 1.4, maxWidth: 234, marginTop: 2, whiteSpace: 'pre-line' }}>
+      <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: 8, color: C.navy, opacity: 0.6, letterSpacing: 0.2, lineHeight: 1.4, maxWidth: 234, marginTop: 2, marginLeft: 8, whiteSpace: 'pre-line' }}>
         {`${P.org_en_legal},\n${P.org_en_full}`}
       </div>
     </div>

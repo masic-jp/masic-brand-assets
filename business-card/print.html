@@ -147,16 +147,6 @@
     <span style="opacity:.6">· 91×55mm · 塗り足し 3mm · トンボ付き</span>
   </div>
   <div class="grp">
-    <span style="opacity:.6">表示:</span>
-    <select id="filter">
-      <option value="all">All variations</option>
-      <option value="V1">V1 — Classic Mincho</option>
-      <option value="V2">V2 — Modern Geometric</option>
-      <option value="V3">V3 — Editorial Mono</option>
-      <option value="V4">V4 — Bold Display</option>
-      <option value="V5">V5 — Hybrid Mincho × Mono</option>
-      <option value="V6">V6 — V1 表 × ででーん裏</option>
-    </select>
     <button onclick="window.print()">Print / PDF</button>
   </div>
 </div>
@@ -210,7 +200,7 @@ const TrimMarks = () => {
 };
 
 const Page = ({ variation, side, CardComp }) => {
-  const sideJp = side === 'front' ? '表 / Front (日本語)' : '裏 / Back (English)';
+  const sideJp = side === 'front' ? '表 / 個人情報' : '裏 / 組織情報';
   return (
     <div className="page" data-variation={variation} data-side={side}>
       <div className="card-holder">
@@ -239,11 +229,6 @@ const Page = ({ variation, side, CardComp }) => {
 
 const App = () => {
   const variations = [
-    { id: 'V1', name: 'Classic Mincho',    Front: window.V1Front, Back: window.V1Back },
-    { id: 'V2', name: 'Modern Geometric',  Front: window.V2Front, Back: window.V2Back },
-    { id: 'V3', name: 'Editorial Mono',    Front: window.V3Front, Back: window.V3Back },
-    { id: 'V4', name: 'Bold Display',      Front: window.V4Front, Back: window.V4Back },
-    { id: 'V5', name: 'Mincho × Mono',     Front: window.V5Front, Back: window.V5Back },
     { id: 'V6', name: 'V1 × ででーん裏',   Front: window.V6Front, Back: window.V6Back },
   ];
   return (
@@ -259,21 +244,6 @@ const App = () => {
 };
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-
-// filter
-document.getElementById('filter').addEventListener('change', (e) => {
-  const v = e.target.value;
-  const root = document.getElementById('root');
-  if (v === 'all') {
-    root.classList.remove('filtering');
-    root.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
-  } else {
-    root.classList.add('filtering');
-    root.querySelectorAll('.page').forEach(p => {
-      p.classList.toggle('show', p.dataset.variation === v);
-    });
-  }
-});
 </script>
 </body>
 </html>
