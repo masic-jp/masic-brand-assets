@@ -77,6 +77,27 @@ python3 _rebuild.py --profile profiles/yamada.json
 
 の設定で PDF として保存する（Chrome の「PDF として保存」推奨）。
 
+## Canva にアップロードする
+
+V6 表/裏を編集可能な Canva デザインとして書き出すには `canva-export.html` を使う。
+
+```bash
+python3 _rebuild.py --profile profiles/<name>.json
+# → dist/canva-export-<name>.html (≈1.3MB)
+```
+
+`dist/canva-export-<name>.html` を、Canva の「デザインを作成」→「インポート」からアップロードする (Canva MCP connector 経由なら public URL を渡すだけ)。
+
+### 制約
+
+- **HTML ファイルサイズ 10MB 以下** (Canva のインポート制限)
+- Google Fonts は `&text=` URL パラメータで必要文字のみ subset する。subset せずにビルドすると Noto Sans/Serif JP の全シャードが inline され 19MB 超になり、Canva にはじかれる
+- Canva は `<section>` や `break-after: page` を尊重しないので、表/裏を別ページにしたい場合は Canva 側で「ページを分割」などの手動操作が必要
+
+### 文字 subset の更新（新メンバー追加時）
+
+`canva-export.html` の `<link href="https://fonts.googleapis.com/css2?...&text=...">` の `text=` パラメータには、現メンバー全員の氏名・役職と V6 内の静的コピーで使う漢字・かな・記号がエンコードされている。新メンバーの氏名/役職に未登録の漢字が含まれる場合、その漢字を `text=` の URL-encoded 文字列に追加する（または `_subset_chars.py` ヘルパーで再生成）。
+
 ## `_base/` の役割
 
 `_rebuild.py` は Anthropic Design Canvas が生成した standalone のバンドラスケルトン（React/Babel/フォントを含む UUID マニフェスト + bootstrap script）を必要とする。それを `_base/` に置いて commit している。`_rebuild.py` 実行のたびに、その中の JSX とテンプレートだけを最新ソースで上書きして `dist/` に書き出す。

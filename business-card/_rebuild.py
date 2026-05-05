@@ -106,3 +106,24 @@ for src_html, base_bundle_html, out_template in PAIRS:
 
     (DIST / out_html).write_text(bundle_text, encoding="utf-8")
     print(f"rebuilt: dist/{out_html}  ({len(bundle_text):,} bytes)")
+
+# canva-export: lightweight path — no _base/ needed.
+# Inlines cards.jsx directly (replaces `src="cards.jsx"` with inline script)
+# so the output is self-contained for Canva's importer. CDN references
+# (React, Babel, Google Fonts) are left as-is; Canva fetches them at import time.
+canva_src = (ROOT / "canva-export.html").read_text(encoding="utf-8")
+jsx_text = (ROOT / "cards.jsx").read_text(encoding="utf-8")
+if profile is not None:
+    jsx_text = (
+        f"window.__MaSIC_PROFILE = {json.dumps(profile, ensure_ascii=False)};\n"
+        + jsx_text
+    )
+canva_out = canva_src.replace(
+    '<script type="text/babel" src="cards.jsx"></script>',
+    f'<script type="text/babel">\n{jsx_text}\n</script>',
+)
+if canva_out == canva_src:
+    raise RuntimeError('canva-export.html: could not find <script type="text/babel" src="cards.jsx"></script>')
+out_canva = f"canva-export{profile_suffix}.html"
+(DIST / out_canva).write_text(canva_out, encoding="utf-8")
+print(f"rebuilt: dist/{out_canva}  ({len(canva_out):,} bytes)")

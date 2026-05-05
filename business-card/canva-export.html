@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MaSIC 名刺 — Canva Export</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Google Fonts subset via &text=. Covers all chars used in the V6 layout
+     across current profiles (uda / tanaka / teruya) plus static copy.
+     New profile chars must be added here OR the page falls back to Latin
+     defaults for those glyphs. See README "Canva にアップロードする". -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500&family=Noto+Sans+JP:wght@500;700;900&family=EB+Garamond:wght@500&family=Inter:wght@500;700&display=swap&text=%20.%2F%3A%40ACDEGIKMPRSTUacdefhijklmnoprstuvyz%C2%B7%E3%80%81%E3%80%82%E3%81%8C%E3%81%8F%E3%81%91%E3%81%97%E3%81%98%E3%81%99%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%AE%E3%81%B8%E3%81%BE%E3%82%92%E3%82%BB%E3%82%BF%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%96%E4%B8%AD%E4%B9%83%E4%BA%8B%E4%BA%BA%E4%BB%A3%E4%BC%9A%E5%8A%9B%E5%8B%99%E5%8D%9A%E5%9B%A3%E5%9F%BA%E5%A3%AB%E5%AD%A6%E5%AE%87%E5%AE%9F%E5%B1%80%E5%B1%8A%E5%B1%8B%E5%B7%A5%E5%BA%83%E5%BD%93%E6%88%90%E6%8B%85%E6%8C%81%E6%95%99%E6%95%B0%E6%99%BA%E6%9D%90%E6%AC%A1%E6%B3%95%E7%85%A7%E7%90%86%E7%94%B0%E7%9B%A4%E7%A0%94%E7%A4%BE%E7%A7%91%E7%A9%B6%E7%B4%80%E7%B6%BE%E8%82%B2%E8%88%AC%E8%A3%85%E8%A7%A3%E8%AA%B2%E9%80%9A%E9%95%B7%E9%A1%8C%EF%BC%88%EF%BC%89" rel="stylesheet">
+<style>
+  /* Canva export view: stack V6 表 then V6 裏 as separate <section>s, each
+     at 1:1 print size (1075×650 px ≈ 91×55mm @ ≈300dpi).
+     The cards.jsx components render at 364×220; we transform: scale them up
+     to 1075×650 inside each section. */
+  html, body { margin: 0; padding: 0; background: #DDD; font-family: 'Inter', sans-serif; }
+  * { box-sizing: border-box; }
+  .slide {
+    width: 1075px; height: 650px;
+    background: #FFFFFF; position: relative; overflow: hidden;
+    margin: 24px auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    /* Strong hint to importers that 表/裏 are separate pages.
+       Empirically Canva does not honor this — see HANDOFF.md §2a. */
+    break-after: page;
+    page-break-after: always;
+  }
+  .scaler {
+    transform-origin: top left;
+    transform: scale(2.953296703); /* 1075 / 364 */
+    width: 364px;
+    height: 220px;
+  }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#F5F4EF">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#F5F4EF"/>
+    <g transform="translate(417 200) scale(1.65)" fill-rule="evenodd">
+      <path fill="#1E656D" d="M 0 0 L 0 131 L 116 131 Z"/>
+      <path fill="#152B3B" d="M 123 4 L 135 4 C 183.07 3.43, 219.49 45.89, 222 86 L 222 91 L 123 91 Z"/>
+      <path fill="#152B3B" d="M 123 98 L 137 98 C 184.80 100.24, 227.21 138.18, 222 185 C 218.63 214.14, 192.37 238.91, 160 242 L 123 242 Z"/>
+      <path fill="#C32F30" d="M 3 143 L 113 143 Q 116 143 116 146 C 116.31 183.55, 95.21 217.28, 59 235 C 21.56 218.17, -0.48 183.78, 0 146 Q 0 143 3 143 Z"/>
+    </g>
+    <text x="600" y="680" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="72" fill="#0D1117" letter-spacing="8">MaSIC</text>
+  </svg>
+</template>
+<div id="root"></div>
+<script type="text/babel" src="cards.jsx"></script>
+<script type="text/babel">
+const App = () => (
+  <>
+    <section className="slide" data-screen-label="01 Front" data-side="front">
+      <div className="scaler"><window.V6Front /></div>
+    </section>
+    <section className="slide" data-screen-label="02 Back" data-side="back">
+      <div className="scaler"><window.V6Back /></div>
+    </section>
+  </>
+);
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
