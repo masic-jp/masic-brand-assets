@@ -6,7 +6,7 @@
 <title>MaSIC 名刺 — Design Exploration</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=IBM+Plex+Sans+JP:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700;900&family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=IBM+Plex+Sans+JP:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   html, body { margin: 0; padding: 0; background: #F5F4EF; font-family: 'Inter', sans-serif; }
   * { box-sizing: border-box; }
@@ -166,6 +166,7 @@ const Cover = () => {
           <div>V3 — Editorial Mono</div>
           <div>V4 — Bold Display</div>
           <div>V5 — Hybrid Mincho × Mono</div>
+          <div>V6 — V1 表 × ででーん裏</div>
         </div>
       </div>
     </div>
@@ -195,6 +196,9 @@ const App = () => (
       </DCArtboard>
       <DCArtboard id="v5" label="V5 — Hybrid Mincho × Mono · 縦書き × 等幅" width={1240} height={440}>
         <PairArtboard Front={window.V5Front} Back={window.V5Back} />
+      </DCArtboard>
+      <DCArtboard id="v6" label="V6 — V1 表 × ででーん裏" width={1240} height={440}>
+        <PairArtboard Front={window.V6Front} Back={window.V6Back} />
       </DCArtboard>
     </DCSection>
 
@@ -228,6 +232,12 @@ const App = () => (
       </DCArtboard>
       <DCArtboard id="p5b" label="V5 · 裏 / Back" width={620} height={400}>
         <PrintCard Card={window.V5Back} label="V5.back" />
+      </DCArtboard>
+      <DCArtboard id="p6" label="V6 · 表 / Front" width={620} height={400}>
+        <PrintCard Card={window.V6Front} label="V6.front" />
+      </DCArtboard>
+      <DCArtboard id="p6b" label="V6 · 裏 / Back" width={620} height={400}>
+        <PrintCard Card={window.V6Back} label="V6.back" />
       </DCArtboard>
     </DCSection>
   </DesignCanvas>
