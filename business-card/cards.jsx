@@ -97,8 +97,8 @@ const Card = ({ children, bg = C.paper }) => (
 // ─────────────────────────────────────────────────────
 // V1 — Classic Mincho. Quiet authority; serifed grace.
 // ─────────────────────────────────────────────────────
-const V1Front = () => (
-  <Card bg={C.paperWarm}>
+const V1Front = ({ bg = C.paperWarm }) => (
+  <Card bg={bg}>
     <div style={{ position: 'absolute', inset: 0, padding: '20px 22px', display: 'flex' }}>
       <div style={{ width: 64, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
         <MaSICWordmark width={60} />
@@ -493,7 +493,7 @@ const V5Back = () => (
 // ─────────────────────────────────────────────────────
 // V6 — V1 表 + V4 表ふう見切れ背景の裏 with でかキャッチコピー
 // ─────────────────────────────────────────────────────
-const V6Front = V1Front;
+const V6Front = () => <V1Front bg="#FFFFFF" />;
 
 const V6Back = () => (
   <Card bg="#FFFFFF">
