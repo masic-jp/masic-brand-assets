@@ -496,12 +496,12 @@ const V5Back = () => (
 const V6Front = V1Front;
 
 const V6Back = () => (
-  <Card bg={C.paperWarm}>
+  <Card bg="#FFFFFF">
     <div style={{ position: 'absolute', right: -80, top: -40, opacity: 0.18 }}>
       <MaSICLogo size={300} />
     </div>
     <div style={{ position: 'absolute', inset: 0, padding: '22px 26px' }}>
-      <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 900, fontSize: 42, color: '#0f172a', letterSpacing: 0, lineHeight: 1.1 }}>
+      <div style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 900, fontSize: 40, color: '#0f172a', letterSpacing: 0, lineHeight: 1.1 }}>
         数学を、<br/>
         <span style={{
           background: 'linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%)',
@@ -517,7 +517,7 @@ const V6Back = () => (
         一般社団法人 数理社会実装教育研究センター
       </div>
       <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: 8, color: C.navy, opacity: 0.6, letterSpacing: 0.2, lineHeight: 1.4, maxWidth: 234, marginTop: 2, whiteSpace: 'pre-line' }}>
-        {`${P.org_en_legal},\n${P.org_en_short}`}
+        {`${P.org_en_legal},\n${P.org_en_full}`}
       </div>
     </div>
     <div style={{ position: 'absolute', right: 22, bottom: 22 }}>
