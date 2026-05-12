@@ -71,4 +71,4 @@ python3 -m http.server 8000
 | `logo/_export_png.py` | SVG → PNG 一括書き出し | `rsvg-convert`（`brew install librsvg`） |
 | `business-card/_rebuild.py` | ソース HTML/JSX を standalone にバンドル | Python 3 標準ライブラリのみ |
 
-ロゴ差し替えや色変更を行う場合の具体的な作業順は [CLAUDE.md](CLAUDE.md) の「ロゴ SVG はコード内に inline」節を参照。
+ロゴ差し替えや色変更を行う場合の具体的な作業順は [AGENTS.md](AGENTS.md) の「ロゴ SVG はコード内に inline」節を参照。
